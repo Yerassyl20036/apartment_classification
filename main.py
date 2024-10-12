@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import cv2
 
 # Load the trained YOLOv8 model
-model_path = r'C:\Users\Yerassyl\runs\detect\yolov8_custom313\weights\best.pt'  # Path to your trained model
+model_path = r'.\yolov8_custom313\weights\best.pt'  # Path to your trained model
 model = YOLO(model_path)
 
 # Specify the directory containing your test images
