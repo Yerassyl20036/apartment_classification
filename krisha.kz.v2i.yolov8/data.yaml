@@ -1,0 +1,13 @@
+train: ../train/images
+val: ../train/images
+test: ../test/images
+
+nc: 7
+names: ['balcony', 'bathroom', 'hallway', 'kitchen', 'living_room', 'other', 'studio']
+
+roboflow:
+  workspace: datathon24
+  project: krisha.kz
+  version: 2
+  license: CC BY 4.0
+  url: https://universe.roboflow.com/datathon24/krisha.kz/dataset/2

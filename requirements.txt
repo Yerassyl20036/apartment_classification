@@ -1,0 +1,4 @@
+ultralytics==8.0.3  # YOLOv8 library
+torch>=1.7           # PyTorch (used by YOLOv8)
+numpy                # For handling arrays and numerical operations
+opencv-python        # For image handling and visualization (optional, if needed)
