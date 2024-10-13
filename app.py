@@ -6,6 +6,8 @@ import easyocr
 import matplotlib.pyplot as plt
 import numpy as np
 import os
+import base64
+from io import BytesIO
 
 # Load the trained YOLOv8 model
 model_path = r'.\yolov8_custom314\weights\best.pt'  # Path to your trained model
@@ -15,13 +17,31 @@ reader = easyocr.Reader(['ru'])
 app = Flask(__name__)
 
 def process_image1(image_path):
+    print(f"Processing image: {image_path}")
+    
+    # Run inference
     results = model.predict(source=image_path, show=False)
+    
+    # Count living_room objects
     living_room_count = sum(1 for box in results[0].boxes if results[0].names[int(box.cls)] == 'living_room')
-
-    return living_room_count
+    print(f"Number of living_room objects detected: {living_room_count}")
+    
+    # Load the image
+    img = cv2.imread(image_path)
+    
+    # Plot the YOLO results on the image
+    img_with_boxes = results[0].plot()
+    
+    # Convert the image to base64 for web display
+    _, buffer = cv2.imencode('.png', img_with_boxes)
+    img_base64 = base64.b64encode(buffer).decode('utf-8')
+    
+    return living_room_count, img_base64
 
 def process_image(image_path):
+    global largest_overall_number  # Use the global variable to track across runs
     image = cv2.imread(image_path)
+    
     if image is None:
         print(f"Error: Image not found at {image_path}")
         return None
@@ -29,6 +49,7 @@ def process_image(image_path):
     results = reader.readtext(image)
     detected_texts = []
     largest_number = None
+    largest_box = None
 
     number_pattern = re.compile(r'\b\d{2,3}[.,]\d{1,2}\b')
 
@@ -47,8 +68,15 @@ def process_image(image_path):
             if number is not None:
                 if largest_number is None or number > largest_number:
                     largest_number = number
+                    largest_box = bbox
 
-    return largest_number, detected_texts
+    highest_number = compare(detected_texts)
+    if highest_number is not None:
+        print(f"The apartment area is: {highest_number}")
+    else:
+        print("No valid numbers found.")
+
+    return highest_number
 
 def compare(texts):
     def custom_float_parser(text):
@@ -80,14 +108,14 @@ def upload_image():
             image_path = os.path.join('uploads', file.filename)
             file.save(image_path)
 
-            living_room_count = process_image1(image_path)
-            largest_number, detected_texts = process_image(image_path)
+            living_room_count, img_base64 = process_image1(image_path)
+            largest_number = process_image(image_path)
             result = {
                 "living_room_count": living_room_count,
                 "largest_number": largest_number,
-                "detected_texts": detected_texts,
+                "processed_image": img_base64
             }
-
+            print(largest_number)
             return render_template('result.html', result=result)
 
     return render_template('upload.html')
@@ -96,4 +124,4 @@ if __name__ == '__main__':
     # Create uploads folder if it doesn't exist
     if not os.path.exists('uploads'):
         os.makedirs('uploads')
-    app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000)

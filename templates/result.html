@@ -4,12 +4,56 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Result</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        p {
+            margin-bottom: 10px;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 20px auto;
+        }
+        .btn {
+            display: inline-block;
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .btn:hover {
+            background-color: #0056b3;
+        }
+    </style>
 </head>
 <body>
-    <h1>Processing Results</h1>
-    <p>Number of living room objects detected: {{ result.living_room_count }}</p>
-    <p>The largest number detected: {{ result.largest_number }}</p>
-    <p>Detected texts: {{ result.detected_texts }}</p>
-    <a href="{{ url_for('upload_image') }}">Upload another image</a>
+    <div class="container">
+        <h1>Processing Results</h1>
+        <p><strong>Number of living room objects detected:</strong> {{ result.living_room_count }}</p>
+        <p><strong>The largest number detected:</strong> {{ result.largest_number }}</p>
+        <img src="data:image/png;base64,{{ result.processed_image }}" alt="Processed Image">
+        <a href="{{ url_for('upload_image') }}" class="btn">Upload another image</a>
+    </div>
 </body>
 </html>

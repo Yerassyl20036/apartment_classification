@@ -4,12 +4,66 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Upload Image</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+        }
+        h1 {
+            color: #333;
+        }
+        form {
+            margin-top: 20px;
+        }
+        input[type="file"] {
+            display: none;
+        }
+        label {
+            display: inline-block;
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            background-color: #008CBA;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        #preview {
+            margin-top: 20px;
+            max-width: 100%;
+        }
+    </style>
 </head>
 <body>
     <h1>Upload an Image</h1>
     <form method="POST" enctype="multipart/form-data">
-        <input type="file" name="file" accept="image/*" required>
+        <label for="file-upload">Choose Image</label>
+        <input id="file-upload" type="file" name="file" accept="image/*" required onchange="previewImage(event)">
+        <br>
         <button type="submit">Upload</button>
     </form>
+    <img id="preview" src="" alt="Image preview" style="display: none;">
+
+    <script>
+        function previewImage(event) {
+            var reader = new FileReader();
+            reader.onload = function(){
+                var output = document.getElementById('preview');
+                output.src = reader.result;
+                output.style.display = 'block';
+            };
+            reader.readAsDataURL(event.target.files[0]);
+        }
+    </script>
 </body>
 </html>
