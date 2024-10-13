@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Result</title>
+</head>
+<body>
+    <h1>Processing Results</h1>
+    <p>Number of living room objects detected: {{ result.living_room_count }}</p>
+    <p>The largest number detected: {{ result.largest_number }}</p>
+    <p>Detected texts: {{ result.detected_texts }}</p>
+    <a href="{{ url_for('upload_image') }}">Upload another image</a>
+</body>
+</html>
